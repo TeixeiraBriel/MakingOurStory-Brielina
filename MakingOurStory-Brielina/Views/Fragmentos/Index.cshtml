@@ -1,0 +1,16 @@
+﻿@model fragmentoHistoria
+@{
+    ViewData["TituloPasso"] = Model.TituloFragmento;
+    ViewData["TextoPasso"] = Model.TextoFragmento;
+}
+
+<h1>@ViewData["TituloPasso"]</h1>
+<p>@ViewData["TextoPasso"]</p>
+
+@{ foreach (var fragmento in Model.Segmentos)
+    {
+        <button type="button" class="btn btn-outline-success">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Fragmentos" asp-action="Index" asp-route-id="@fragmento.IdFragmentoHistoria">@fragmento.TituloFragmento</a>
+        </button>
+    }
+}

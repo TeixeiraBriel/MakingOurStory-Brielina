@@ -1,0 +1,35 @@
+﻿@model fragmentoHistoria
+@{
+    ViewData["TituloPasso"] = Model.TituloFragmento;
+    ViewData["IdFragmentoHistoria"] = Model.IdFragmentoHistoria;
+    ViewData["TextoPasso"] = Model.TextoFragmento;
+}
+
+<h1>Novo Passo</h1>
+<br />
+<h5>Passo Anterior:</h5>
+
+<div class="form-row" style="margin-bottom: 10px">
+    <div class="col">
+        <input type="text" class="form-control" placeholder="@ViewData["TituloPasso"]" readonly>
+    </div>
+    <div class="col">
+        <input type="text" class="form-control" placeholder="@ViewData["TextoPasso"]" readonly>
+    </div>
+</div>
+
+<h5>Passo Novo:</h5>
+<form method="post" action="novoFragmento"
+      enctype="application/x-www-form-urlencoded">
+    <div class="form-row">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Titulo" name="TituloFragmento">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Descrição" name="TextoFragmento">
+        </div>
+    </div>
+    <input type="text" class="form-control" value="@ViewData["IdFragmentoHistoria"]" name="IdFragmentoParent" hidden>
+
+    <button type="submit" class="btn btn-primary" style="margin-top:10px">Submit</button>
+</form>
