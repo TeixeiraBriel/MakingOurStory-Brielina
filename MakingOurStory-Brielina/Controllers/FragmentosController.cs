@@ -1,4 +1,5 @@
 ﻿using MakingOurStory_Brielina.Models;
+using RestSharp;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
@@ -6,8 +7,14 @@ namespace MakingOurStory_Brielina.Controllers
 {
     public class FragmentosController : Controller
     {
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         [Route("Fragmentos/Index/{id}")]
-        public ActionResult Index([FromRoute] int id)
+        public ActionResult Index(int id)
         {
             return View(new fragmentoHistoria
             {
@@ -33,26 +40,16 @@ namespace MakingOurStory_Brielina.Controllers
         }
 
         [Route("Fragmentos/Sequencia/{id}")]
-        public ActionResult Sequencia([FromRoute]int id)
+        public ActionResult Sequencia(int id)
         {
             fragmentoHistoria fragmento = new fragmentoHistoria { IdFragmentoHistoria = id };
-
-            fragmentoHistoria resposta = coletaApi(id);
-
-            fragmento.TituloFragmento = resposta.TituloFragmento;
-            fragmento.TextoFragmento = resposta.TextoFragmento;        
-            fragmento.Segmentos = new List<fragmentoHistoria>();
-
-            foreach (var segmento in resposta.Segmentos)
-            {
-                fragmento.Segmentos.Add(segmento);
-            }
+            fragmento = coletaApi(fragmento); 
 
             return View(fragmento);
         }
 
         [Route("Fragmentos/Novo/{id}")]
-        public ActionResult Novo([FromRoute] int id)
+        public ActionResult Novo(int id)
         {
             fragmentoHistoria fragmento = new fragmentoHistoria { IdFragmentoHistoria = id };
             fragmento.obtemInfos(id);
@@ -60,23 +57,27 @@ namespace MakingOurStory_Brielina.Controllers
             return View(fragmento);
         }
 
-        public fragmentoHistoria coletaApi(int id)
+        public fragmentoHistoria coletaApi(fragmentoHistoria fragBase)
         {
+            int id = fragBase.IdFragmentoHistoria;
             fragmentoHistoria resposta = new fragmentoHistoria { IdFragmentoHistoria = id };
             resposta.obtemInfos(id);
             resposta.obtemSegmentos(id);
-
 
             return resposta;
         }
 
 
         [HttpPost]
-        [Route("Fragmentos/Novo/novoFragmento")]
-        public void PostComplex(fragmentoHistoria novo)
+        [Route("Fragmentos/GravarFragmento/")]
+        public ActionResult GravarFragmento(fragmentoHistoria novo)
         {
             novo.gravarnovo(novo);
-            var x = novo;
+
+            fragmentoHistoria fragmentoPai = new fragmentoHistoria { IdFragmentoHistoria = novo.IdFragmentoParent };
+            fragmentoPai = coletaApi(fragmentoPai);
+
+            return View("Sequencia", fragmentoPai);
         }
     }
 }

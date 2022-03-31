@@ -1,8 +1,10 @@
-﻿@model fragmentoHistoria
+﻿@model MakingOurStory_Brielina.Models.fragmentoHistoria
+
 @{
-    ViewData["TituloPasso"] = Model.TituloFragmento;
+    ViewBag.Title = "Novo Passo";
+    ViewData["TituloPassoAntigo"] = Model.TituloFragmento;
+    ViewData["TextoPassoAntigo"] = Model.TextoFragmento;
     ViewData["IdFragmentoHistoria"] = Model.IdFragmentoHistoria;
-    ViewData["TextoPasso"] = Model.TextoFragmento;
 }
 
 <h1>Novo Passo</h1>
@@ -11,25 +13,35 @@
 
 <div class="form-row" style="margin-bottom: 10px">
     <div class="col">
-        <input type="text" class="form-control" placeholder="@ViewData["TituloPasso"]" readonly>
+        <input type="text" class="form-control" placeholder="@ViewData["TituloPassoAntigo"]" readonly>
     </div>
     <div class="col">
-        <input type="text" class="form-control" placeholder="@ViewData["TextoPasso"]" readonly>
+        <input type="text" class="form-control" placeholder="@ViewData["TextoPassoAntigo"]" readonly>
     </div>
 </div>
 
 <h5>Passo Novo:</h5>
-<form method="post" action="novoFragmento"
+
+@using (Html.BeginForm("GravarFragmento", "Fragmentos", FormMethod.Post@*, new MakingOurStory_Brielina.Models.fragmentoHistoria{IdFragmentoParent = Model.IdFragmentoHistoria, TextoFragmento = ViewBag.TextoFragmento.value, TituloFragmento = ViewBag.TituloFragmento.value }*@))
+{
+Model.TituloFragmento = "";
+Model.TextoFragmento = "";
+Model.IdFragmentoParent = Model.IdFragmentoHistoria;
+
+<form method="post" action="Novo"
       enctype="application/x-www-form-urlencoded">
     <div class="form-row">
         <div class="col">
-            <input type="text" class="form-control" placeholder="Titulo" name="TituloFragmento">
+            @Html.TextBoxFor(m => m.TituloFragmento, new { placeholder = "Titulo", @class = "form-control" })
         </div>
         <div class="col">
-            <input type="text" class="form-control" placeholder="Descrição" name="TextoFragmento">
+            @Html.TextBoxFor(m => m.TextoFragmento, new { placeholder = "Texto", @class = "form-control" })
         </div>
+        @Html.TextBoxFor(m => m.IdFragmentoParent, new { @class = "collapse" })
     </div>
-    <input type="text" class="form-control" value="@ViewData["IdFragmentoHistoria"]" name="IdFragmentoParent" hidden>
-
-    <button type="submit" class="btn btn-primary" style="margin-top:10px">Submit</button>
+    <div>
+        <button type="submit" class="btn btn-primary" style="margin-top:10px">Gravar</button>
+        @Html.ActionLink("Voltar", "Sequencia", "Fragmentos", new { id = Model.IdFragmentoParent }, new { @class = "btn btn-info", @style = "margin-top:10px;" })
+    </div>
 </form>
+}

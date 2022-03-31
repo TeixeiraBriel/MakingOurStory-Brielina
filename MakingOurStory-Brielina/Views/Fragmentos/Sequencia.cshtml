@@ -1,5 +1,7 @@
-﻿@model fragmentoHistoria
+﻿@model MakingOurStory_Brielina.Models.fragmentoHistoria
+
 @{
+    ViewBag.Title = Model.TituloFragmento;
     ViewData["PassoAnterior"] = Model.IdFragmentoParent;
     ViewData["TituloPasso"] = Model.TituloFragmento;
     ViewData["TextoPasso"] = Model.TextoFragmento;
@@ -10,11 +12,13 @@
 
 @{ foreach (var fragmento in Model.Segmentos)
     {
-        <button type="button" class="btn btn-outline-success">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Fragmentos" asp-action="Sequencia" asp-route-id="@fragmento.IdFragmentoHistoria" asp-route-fragmento="@fragmento">@fragmento.TituloFragmento</a>
-        </button>
+        @Html.ActionLink(fragmento.TituloFragmento, "Sequencia", "Fragmentos", new { id = fragmento.IdFragmentoHistoria, fragmento = fragmento }, new { @class = "btn btn-primary", @style = "margin-left:4px;" })
     }
 }
-<button type="button" class="btn btn-outline-secondary">
-    <a class="nav-link text-dark" asp-area="" asp-controller="Fragmentos" asp-action="Novo" asp-route-id="@Model.IdFragmentoHistoria">Novo</a>
-</button>
+
+@Html.ActionLink("Novo", "Novo", "Fragmentos", new { id = Model.IdFragmentoHistoria }, new { @class = "btn btn-success" })
+
+@if (Model.IdFragmentoParent != 0)
+{
+    @Html.ActionLink("Voltar", "Sequencia", "Fragmentos", new { id = Model.IdFragmentoParent }, new { @class = "btn btn-info" })
+}
